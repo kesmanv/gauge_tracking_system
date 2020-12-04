@@ -21,11 +21,13 @@ gauge_manufacturer = df['Manufacturer'].dropna().unique()
 
 # To be added
 # gauge_rr
-#############################################################################################################################
+##########################################################################################################################
 # Function to filter gauges by upcoming due date
 # Returns list of due gauges for the table
 # Returns gauge due by Manufacturer for a chart
 # Returns gauges due by type for a chart 
+
+
 
 def due_date_next(df=df, days=30):
     
@@ -54,8 +56,15 @@ df.drop(drop, axis=1, inplace=True)
 dates = [#'Service Date'
         'Last Cal Date'
         ,'Next Due Date']
+df['Due Soon'] = 'No'
+due_date = datetime.today() + timedelta(days=30)
+
 for date in dates:
-    df[date] = pd.to_datetime(df[date]).dt.strftime('%Y-%m-%d')
+    df[date] = pd.to_datetime(df[date])
+    if date=='Next Due Date':
+        df.loc[df['Next Due Date'] < due_date, 'Due Soon'] = 'Yes'
+    
+    df[date] = df[date].dt.strftime('%Y-%m-%d')
 
 
 
@@ -66,3 +75,4 @@ gauge_by_mfg = gauge_by_mfg.rename(columns={'index':'Manufacturer',
 # gauge_by_type = df.Type.value_counts().reset_index()
 # gauge_by_type = gauge_by_type.rename(columns={'index':'Type', 
 #                         'Type': 'No. Gauge Due'}).sort_values(by='No. Gauge Due')
+

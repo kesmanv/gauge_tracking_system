@@ -53,7 +53,7 @@ gauge_filters = html.Div([
                     ,dcc.Checklist(
                     id='gauge-due-soon'
                     ,options=[
-                        {'label': ' Due Soon Only', 'value': 'DSO'},
+                        {'label': ' Due Soon Only', 'value': 'Yes'},
                     ],
                     value=[]
 ) 

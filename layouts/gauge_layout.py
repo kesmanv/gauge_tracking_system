@@ -92,38 +92,25 @@ def tab_gauge_content(active_tab):
     ,[
         Input('plant', 'value')
         ,Input('gauge-manufacturer', 'value')
-        ,Input('gauge-type', 'value')   
+        ,Input('gauge-type', 'value')
+        ,Input('gauge-due-soon', 'value')   
     ]
 )
-def tb_manufacturer_filter(plant, mfg, g_type):
-    if (len(plant) == 0) and (len(mfg)==0) and (len(g_type)==0): 
+
+def tb_gauge_filters(plant, mfg, g_type, due):
+    filters_input = {'Plant': plant, 'Manufacturer':mfg, 'Type':g_type, 'Due Soon': due}
+    filtered_dict = {k:v for k,v in filters_input.items() if len(v)!=0}
+
+    if len(filtered_dict)==0:
         return tf.df.to_dict('rows')
-    elif (len(plant) != 0) and (len(mfg)==0) and (len(g_type)==0):
-        filtered_table = tf.df.loc[(tf.df['Plant'].isin(plant)==True)]
-        return filtered_table.to_dict('rows')
-    elif (len(plant) != 0) and (len(mfg)!=0) and (len(g_type)==0):
-        filtered_table = tf.df.loc[(tf.df['Plant'].isin(plant)==True) 
-                                    & (tf.df['Manufacturer'].isin(mfg)==True)]
-        return filtered_table.to_dict('rows')
-    elif (len(plant) != 0) and (len(mfg)!=0) and (len(g_type)!=0):
-        filtered_table = tf.df.loc[(tf.df['Plant'].isin(plant)==True) 
-                                    & (tf.df['Manufacturer'].isin(mfg)==True) 
-                                    & (tf.df['Type'].isin(g_type)==True)]
-        return filtered_table.to_dict('rows')
-    elif (len(plant) == 0) and (len(mfg)!=0) and (len(g_type)!=0):
-        filtered_table = tf.df.loc[(tf.df['Manufacturer'].isin(mfg)==True)
-                                    & (tf.df['Type'].isin(g_type)==True)]
-        return filtered_table.to_dict('rows')
-    elif (len(plant) == 0) and (len(mfg)==0) and (len(g_type)!=0):
-        filtered_table = tf.df.loc[tf.df['Type'].isin(g_type)==True]
-        return filtered_table.to_dict('rows')
-    elif (len(plant) != 0) and (len(mfg)==0) and (len(g_type)!=0):
-        filtered_table = tf.df.loc[(tf.df['Plant'].isin(plant)==True)
-                                    & (tf.df['Type'].isin(g_type)==True)]
-        return filtered_table.to_dict('rows')
     else:
-        filtered_table = tf.df.loc[tf.df['Manufacturer'].isin(mfg)==True]
+        filtered_table = tf.df.copy()
+        for k,v in filtered_dict.items():
+            filtered_table = filtered_table.loc[filtered_table[k].isin(v)] 
         return filtered_table.to_dict('rows')
+
+
+
 
 # Due Soon Only filter
 # @app.callback(
