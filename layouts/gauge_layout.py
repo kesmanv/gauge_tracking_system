@@ -8,7 +8,7 @@ import dash_core_components as dcc
 import dash_html_components as html 
 import dash_bootstrap_components as dbc 
 from dash.exceptions import PreventUpdate
-#import dash_table
+from dash_extensions import Download
 import pandas
 from dash.dependencies import Input, Output
 from app import app
@@ -16,6 +16,17 @@ from layouts import plots, cards, tables, navigation_bar, filters
 from database import transforms as tf
 import plotly.graph_objects as go
 
+import io # Used for downloading csv file
+
+white_btn_style = {
+    'background-color': '#e6e6e6'
+    ,'color': 'black'
+    ,'border-radius':'4px'
+    ,'border': '1px solid #bbb'
+    ,'height': '38px'
+    ,'padding': '0 30px'
+    #,'font-size': '11px'
+}
 
 layout = html.Div([
     html.Div(navigation_bar.nav)
@@ -55,7 +66,8 @@ layout = html.Div([
                                 ,html.Div(
                                     id='tabs-gauge-content'
                                     ,style={'padding': '5px 5px 0px 5px'} # padding: Top,Right,Bottom,Left
-                                )     
+                                )
+                                   
                             ] )   
                         ,style={
                             'margin-right':-5
@@ -70,14 +82,20 @@ layout = html.Div([
 ]
 )
 
+
+
 # Tabs callback
 @app.callback(
-    Output('tabs-gauge-content', 'children')
+    [
+        Output('tabs-gauge-content', 'children')
+        ,Output('tb-download-btn', 'children')
+    ]
     ,[Input('tabs-gauge', 'active_tab')]
 )
 def tab_gauge_content(active_tab):
     if active_tab=='tab-gauge-records':
-        return tables.gauge_table 
+        btn = html.Div([html.Button("Download records", id="btn", style=white_btn_style), Download(id="download")]) 
+        return tables.gauge_table, btn
     elif active_tab=='tab-add-gauge':
         return html.H2('New Gauge placeholder')
     elif active_tab=='tab-gauge-studies':
@@ -107,22 +125,7 @@ def tb_gauge_filters(plant, mfg, g_type, due):
         filtered_table = tf.df.copy()
         for k,v in filtered_dict.items():
             filtered_table = filtered_table.loc[filtered_table[k].isin(v)] 
-        return filtered_table.to_dict('rows')
-
-
-
-
-# Due Soon Only filter
-# @app.callback(
-#     Output('gauge-table', 'data')
-#     ,[Input('gauge-due-soon', 'options')]
-# )
-# def gauges_due_soon(dso):
-#     if len(dso)==0:
-#         return tf.df.to_dict('rows')
-#     else:
-#         due_soon = tf.due_date_next(tf.df)
-#         return due_soon.to_dict()                                    
+        return filtered_table.to_dict('rows')                               
 
 # Dynamic dropdown list (gauge filters)
 @app.callback(
@@ -153,3 +156,13 @@ def set_gauge_mfg_options(plant, gauge_type):
         type_options = tf.drop_options(df_type)
         
         return  mfg_options, type_options
+
+
+# Download table (csv)
+@app.callback(Output('download', 'data'), [Input('btn', 'n_clicks')])
+def generate_csv(n_clicks):
+    if n_clicks is not None:
+        s = io.StringIO()
+        tf.df.to_csv(s, index=False)
+        content=s.getvalue()
+        return dict(filename='data.csv', content=content, type='text/csv')

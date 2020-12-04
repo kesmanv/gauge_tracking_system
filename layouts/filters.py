@@ -53,10 +53,12 @@ gauge_filters = html.Div([
                     ,dcc.Checklist(
                     id='gauge-due-soon'
                     ,options=[
-                        {'label': ' Due Soon Only', 'value': 'Yes'},
+                        {'label': ' Due Soon Only (next 30 days)', 'value': 'Yes'},
                     ],
-                    value=[]
-) 
+                    value=['Yes']
+                    )
+                    ,html.Br()
+                    ,html.Div(id='tb-download-btn') 
                     # ,html.Div(
                     #     [
                     #         html.H5('Status')
