@@ -76,3 +76,4 @@ gauge_by_mfg = gauge_by_mfg.rename(columns={'index':'Manufacturer',
 # gauge_by_type = gauge_by_type.rename(columns={'index':'Type', 
 #                         'Type': 'No. Gauge Due'}).sort_values(by='No. Gauge Due')
 
+current_clicks = 0

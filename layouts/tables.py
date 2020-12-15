@@ -54,11 +54,11 @@ gauge_table = dash_table.DataTable(
                                                                 ,{'if': {'column_id':'Gage S/N'}, 'width':'120px', 'textAlign':'center'}
                                                                 ,{'if': {'column_id':'Asset No'}, 'width':'80px', 'textAlign':'center'}
                                                                 ,{'if': {'column_id':'Model No.'}, 'width':'80px', 'textAlign':'center'}
-                                                                ,{'if': {'column_id':'Current Location'}, 'width':'80px', 'textAlign':'center'}
+                                                                ,{'if': {'column_id':'Current Location'}, 'width':'140px', 'textAlign':'center'}
                                                                 ,{'if': {'column_id':'Manufacturer'}, 'width':'100px', 'textAlign':'center'}
                                                                 ,{'if': {'column_id':'Last Calibrated By'}, 'width':'180px', 'textAlign':'center'}
-                                                                ,{'if': {'column_id':'Last Cal Date'}, 'width':'80px', 'textAlign':'center'}
-                                                                ,{'if': {'column_id':'Next Due Date'}, 'width':'80px', 'textAlign':'center'}
+                                                                ,{'if': {'column_id':'Last Cal Date'}, 'width':'170px', 'textAlign':'center'}
+                                                                ,{'if': {'column_id':'Next Due Date'}, 'width':'130px', 'textAlign':'center'}
                                         ]
                                         ,style_header={'fontWeight':'bold'}
                                         ,sort_action='native'                                  

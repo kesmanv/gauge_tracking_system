@@ -9,7 +9,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc 
 from dash.exceptions import PreventUpdate
 from dash_extensions import Download
-import pandas
+import pandas as pd
 from dash.dependencies import Input, Output
 from app import app
 from layouts import plots, cards, tables, navigation_bar, filters
@@ -159,10 +159,18 @@ def set_gauge_mfg_options(plant, gauge_type):
 
 
 # Download table (csv)
-@app.callback(Output('download', 'data'), [Input('btn', 'n_clicks')])
-def generate_csv(n_clicks):
-    if n_clicks is not None:
+@app.callback(
+    Output('download', 'data'), 
+    [
+        Input('btn', 'n_clicks')
+        ,Input('gauge-table', 'data')
+    ]
+)
+def generate_csv(n_clicks, data):
+    if n_clicks is not None and tf.current_clicks != n_clicks:
         s = io.StringIO()
-        tf.df.to_csv(s, index=False)
+        pd.DataFrame.from_dict(data).to_csv(s, index=False)
         content=s.getvalue()
+        tf.current_clicks = n_clicks
         return dict(filename='data.csv', content=content, type='text/csv')
+    
