@@ -51,43 +51,22 @@ gauge_filters = html.Div([
                     )
                     ,html.Br()
                     ,dcc.Checklist(
-                    id='gauge-due-soon'
-                    ,options=[
-                        {'label': ' Due Soon Only (next 30 days)', 'value': 'Yes'},
-                    ],
-                    value=['Yes']
+                        id='gauge-due-soon'
+                        ,options=[
+                            {'label': ' Due Soon Only (next 30 days)', 'value': 'Yes'},
+                        ],
+                        value=['Yes']
+                    )
+                    ,dcc.Checklist(
+                        id='make-gauge-table-editable'
+                        ,options=[
+                            {'label': ' Allow record editing', 'value': 'Y'},
+                        ]
+                        ,value=[]
                     )
                     ,html.Br()
-                    ,html.Div(id='tb-download-btn') 
-                    # ,html.Div(
-                    #     [
-                    #         html.H5('Status')
-                    #         ,dcc.Dropdown(
-                    #             id='gauge-status'
-                    #             ,options = [
-                    #                 {'label':'Active (All)', 'value':'Active'}
-                    #                 ,{'label':'Due Soon', 'value':'Due Soon'}
-                    #                 ,{'label':'Overdue', 'value':'Overdue'}
-                    #             ]
-                    #             ,placeholder='Select gauge status'
-                    #             ,value=[]
-                    #         )
-                    #     ]
-                    # )
-                    # ,html.Br()
-                    # ,html.Div([html.H5('Days to due date')
-                    #         ,dcc.RangeSlider(id='days_to_due-slider'
-                    #                 ,min = 15
-                    #                 ,max = 90
-                    #                 , step = None
-                    #                 , marks = {15: '15',
-                    #                     30: '30',
-                    #                     60: '60',
-                    #                     90: '90',                                        
-                    #                 }
-                    #         , value = [0,90]
-                    #         )
-                    # ]
-                    # )     
+                    ,html.Div(id='tb-download-btn')
+                    ,html.Div(id='table-updated') 
+                        
 ]
 )

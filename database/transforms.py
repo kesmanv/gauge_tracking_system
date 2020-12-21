@@ -7,7 +7,8 @@ def drop_options(df_):
 
 df = pd.read_csv('./database/data/gauges/Master_Gauge_List.csv')
 
-
+df['id'] = df['Gage ID']
+df.set_index('id', inplace=True, drop=False)
 
 #############################################################################################################################
 ######################## Filters 
@@ -77,3 +78,8 @@ gauge_by_mfg = gauge_by_mfg.rename(columns={'index':'Manufacturer',
 #                         'Type': 'No. Gauge Due'}).sort_values(by='No. Gauge Due')
 
 current_clicks = 0
+
+def save_gauge_table_updates():
+        pass
+
+changed_cells = {'row_id':[], 'column_id': []}
