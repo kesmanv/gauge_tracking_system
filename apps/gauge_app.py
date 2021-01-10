@@ -13,11 +13,13 @@ from dash_extensions import Download
 import pandas as pd
 from dash.dependencies import Input, Output, State
 from app import app
-from layouts import plots, cards, navigation_bar, filters, tabs
+from layouts import plots, cards, filters, tabs
 from database import transforms as tf
 import plotly.graph_objects as go
 
 import io # Used for downloading csv file
+
+from app import app
 
 white_btn_style = {
     'background-color': '#e6e6e6'
@@ -47,8 +49,8 @@ layout = html.Div([
     #######################################
     ########## Navigation Bar #############
     #######################################
-    html.Div(navigation_bar.nav)
-    ,dbc.Row(
+    
+    dbc.Row(
             [
             dbc.Col(
                 [
@@ -81,7 +83,7 @@ layout = html.Div([
                                     ,active_tab='tab-gauge-records'
                                     ,children=[
                                         dbc.Tab(label='Gauge Records', tab_id='tab-gauge-records')
-                                        ,dbc.Tab(label='Add Gauge', tab_id='tab-add-gauge')
+                                        #,dbc.Tab(label='Add Gauge', tab_id='tab-add-gauge')
                                         ,dbc.Tab(label='Gauge Studies', tab_id='tab-gauge-studies')
                                         ,dbc.Tab(label='Gauge Capabilities', tab_id='tab-gauge-capabilities')
                                     ]
@@ -91,14 +93,14 @@ layout = html.Div([
                                     ,style={'padding': '5px 5px 0px 5px'} # padding: Top,Right,Bottom,Left
                                 )
                                 ,html.Br()
-                                ,html.Div(
-                                    id='gauge-save-button-div'
-                                    ,children = html.Button(
-                                        'Save'
-                                        ,id='gauge-save-button'
-                                        #, style={'display', 'none'}
-                                        ) 
-                                )  
+                                # ,html.Div(
+                                #     id='gauge-save-button-div'
+                                #     ,children = html.Button(
+                                #         'Save'
+                                #         ,id='gauge-save-button'
+                                #         #, style={'display', 'none'}
+                                #         ) 
+                                # )  
                                 
                             ] )   
                         ,style={
@@ -135,28 +137,28 @@ def tab_gauge_content(active_tab):
         download_btn = html.Div([html.Button("Download records", id="download-btn", style=white_btn_style), Download(id="download")]) 
         #print('tab_gauge_content')
         return tabs.gauge_table, download_btn
-    elif active_tab=='tab-add-gauge':
-        return tabs.add_gauge_layout, html.Br()
+    # elif active_tab=='tab-add-gauge':
+    #     return tabs.add_gauge_layout, html.Br()
     elif active_tab=='tab-gauge-studies':
         return html.H2('Gauge studies placeholder'), html.Br()
     elif active_tab=='tab-gauge-capabilities':
         return html.H2('Gauge capabilities placeholder'), html.Br()
 
-#Make table editable
-@app.callback(
-    [Output('gauge-table', 'editable')
-    ,Output('gauge-save-button', 'style')]
-    ,[Input('make-gauge-table-editable', 'value')] 
+# #Make table editable
+# @app.callback(
+#     [Output('gauge-table', 'editable')
+#     ,Output('gauge-save-button', 'style')]
+#     ,[Input('make-gauge-table-editable', 'value')] 
     
-)
-def make_gauge_tbl_editable(value):
-    #print('make table editable')
-    if value == []:
-        style = {'display':'none'}
-        return False, style
-    elif value == ['Y']:
-        style = blue_btn_style
-        return True, style
+# )
+# def make_gauge_tbl_editable(value):
+#     #print('make table editable')
+#     if value == []:
+#         style = {'display':'none'}
+#         return False, style
+#     elif value == ['Y']:
+#         style = blue_btn_style
+#         return True, style
 
 # Gauge records filters
 @app.callback(Output('gauge-table', 'data')
@@ -229,31 +231,31 @@ def generate_csv(n_clicks, data):
         return dict(filename='data.csv', content=content, type='text/csv')
     
 
-#Update gauge records table with user edits
-@app.callback(
-    [
-        Output('table-updated', 'children')
-    ]
-    ,[
+# #Update gauge records table with user edits
+# @app.callback(
+#     [
+#         Output('table-updated', 'children')
+#     ]
+#     ,[
         
-        Input('gauge-table', 'active_cell')
-        ,Input('gauge-table', 'data')
-        ,Input('gauge-table', 'data_previous')
-        ,Input('make-gauge-table-editable', 'value')
-        ,Input('gauge-save-button', 'n_clicks')
+#         Input('gauge-table', 'active_cell')
+#         ,Input('gauge-table', 'data')
+#         ,Input('gauge-table', 'data_previous')
+#         ,Input('make-gauge-table-editable', 'value')
+#         ,Input('gauge-save-button', 'n_clicks')
         
-    ]
-)
-def update_gauge_table(active_cell, data, data_previous, editable, clicks):
-    #print('update gauge table') # - using this to troubleshoot missing output id warnings 
-    if editable == ['Y']:
-        if active_cell is not None:
-            tf.changed_cells['row_id'].append(active_cell['row_id'])
-            tf.changed_cells['column_id'].append(active_cell['column_id'])
-            print(tf.changed_cells)
-        return ['tracking']   
-    else:
-        return ['nothing tracked']
+#     ]
+# )
+# def update_gauge_table(active_cell, data, data_previous, editable, clicks):
+#     #print('update gauge table') # - using this to troubleshoot missing output id warnings 
+#     if editable == ['Y']:
+#         if active_cell is not None:
+#             tf.changed_cells['row_id'].append(active_cell['row_id'])
+#             tf.changed_cells['column_id'].append(active_cell['column_id'])
+#             print(tf.changed_cells)
+#         return ['tracking']   
+#     else:
+#         return ['nothing tracked']
 
 
     

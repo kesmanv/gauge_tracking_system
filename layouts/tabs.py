@@ -155,7 +155,7 @@ add_gauge_layout = html.Div(
                                 ,dbc.Col(
                                         [
                                                 
-                                                html.P('LabelCode', style=input_style_label)
+                                                html.P('Label Code', style=input_style_label)
                                                 ,html.P('Calibrator', style=input_style_label)
                                                 ,html.P('Last Calibration By', style=input_style_label)
                                                 ,html.P('Calibration Frequency (Months)', style=input_style_label)
